@@ -1,0 +1,38 @@
+\documentclass{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\renewcommand{\labelenumi}{\thesection.\arabic{enumi}}
+\renewcommand{\labelenumii}{\thesection.\arabic{enumi}.\arabic{enumii}}
+
+\newcommand{\tb}[1]{\textbf{#1}}
+
+\title{Workshop AI in smart industry - SMS dataset}
+\author{Onno Huijgen}
+\date{28 maart 2025}
+
+\begin{document}
+
+\maketitle{}
+
+\section{Introductie}
+We gaan nu aan de slag met wat complexere data. We hebben data verzameld van 1000 SMS-berichten. Een gedeelte van die berichten is ongewenste spam, dus het is aan ons om een spamfilter te ontwikkelen. 
+
+\section{Data inladen}
+\begin{enumerate}
+\item Open een nieuw canvas in de Orange tool.
+\item Dit keer is de dataset niet al aanwezig in de tool, en moeten we hem zelf inladen. Maak een module \tb{file} aan op je canvas en laad de SMS-data in. Zorg dat de feature SPAM als \textit{categorical target} variabele staat gemarkeerd.
+\item Laad de data in een \tb{Data Table} en kijk hoe de data eruitziet.
+\item We moeten de data eerst in een formaat zetten waar de Orange tool verder mee kan werken. Dat doen we door een corpus te maken.
+\end{enumerate}
+
+\section{Data visualiseren}
+
+\section{}
+
+\end{document}

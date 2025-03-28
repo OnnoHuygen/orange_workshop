@@ -1,0 +1,29 @@
+\documentclass{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{Workshop AI in smart industry - Iris dataset}
+\author{Onno Huijgen}
+\date{28 maart 2025}
+
+\begin{document}
+
+\maketitle{}
+
+\section{Introductie}
+\begin{enumerate}
+\item 
+\end{enumerate}
+
+\section{Data inladen}
+
+\section{Data visualiseren}
+
+\section{}
+
+\end{document}

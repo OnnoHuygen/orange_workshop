@@ -1,0 +1,87 @@
+\documentclass{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\renewcommand{\labelenumi}{\thesection.\arabic{enumi}}
+\renewcommand{\labelenumii}{\thesection.\arabic{enumi}.\arabic{enumii}}
+
+\newcommand{\tb}[1]{\textbf{#1}}
+
+\title{Workshop AI in smart industry - SMS dataset}
+\author{Onno Huijgen}
+\date{28 maart 2025}
+
+\begin{document}
+
+\maketitle{}
+
+\section*{Introductie}
+We gaan nu aan de slag met wat complexere data. We hebben data verzameld van 1000 SMS-berichten. Een gedeelte van die berichten is ongewenste spam, dus het is aan ons om een spamfilter te ontwikkelen. 
+
+\section{Data inladen}
+\begin{enumerate}
+\item Open een nieuw canvas in de Orange tool.
+\item Dit keer is de dataset niet al aanwezig in de tool, en moeten we hem zelf inladen. Maak een module \tb{file} aan op je canvas en laad de SMS-data met labels in. Zorg dat de feature SPAM als \textit{categorical target} variabele staat gemarkeerd.
+\item Laad de data in een \tb{Data Table} en kijk hoe de data eruitziet.
+\item We moeten de data eerst in een formaat zetten waar de Orange tool verder mee kan werken. Dat doen we door een corpus te maken. Voeg een \tb{Corpus} module toe en neem als input de data uit het bestand.
+\item Je kunt een overzicht maken van de woorden die vaak in de teksten voorkomen door een wordcloud te maken. Doe dit met de \tb{wordcloud} module
+\end{enumerate}
+
+\section{Preprocessing}
+Vaak is het niet een goed idee om de data direct zoals hij is in een machine learning model te gooien. Het is voor een model belangrijk dat de data in het juiste formaat staat, dat er geen missende waardes zijn, en dat er de juiste features zijn waar het model ook van kan leren.
+In dit geval is er geen missende data, maar zijn er ook geen duidelijke (numerieke) features waar een model iets mee kan. Daarnaast is de tekst in de SMSjes nog vrij grof. Identieke woorden kunnne er bijvoorbeeld nog met of zonder hoofdletter instaan, en voor we beginnen met trainen is het handig om dit uniform te maken. Ook staan er nog allerlei leestekens in de tekst. Om dat op te lossen, gaan we de data eerst preprocessen.
+
+\begin{enumerate}
+\item Voeg de module \tb{Preprocess text} toe en verbind je corpus.
+\item In de preprocessor kun je verschillende preprocessing stappen tegelijk uit laten voeren. Begin ermee te zorgen dat de preprocessor alle woorden in lowercase zet.
+\item Zorg dat je preprocessor alle smsjes opbreekt in losse woorden. Dit heet tokenization.
+\item Filter weinig zeggende tussenwoorden uit de dataset. Denk aan woorden als 'de', 'een' of 'en'. Deze worden ook wel \textit{Stopwords} genoemd.
+\item Maak een wordcloud van de tekst na het preprocessen. Ben je tevreden met de woorden die je ziet? Als je nog stopwords toe wilt voegen, kan dat handmatig door een bestandje te maken (stopwords.txt) en in te laden in de preprocessor. Filter stopwords uit de tekst tot je tevreden bent met de wordcloud.
+\item We gaan de data nu omzetten naar een numerieke vorm. Daarvoor gaan we bij elk bericht tellen hoevaak woorden voorkomen. Deze vorm van data heet \tb{Bag of Words}. Maak van de data een \tb{Bag of Words} door de gelijknamige module toe te voegen.
+\item Voor we naar het modelleren overgaan is het handig om nog een transform \tb{Select Columns} toe te voegen. Daarin kun je aangeven welk van de features de target is en wat je allemaal als input gebruikt. Zoals je ziet is er een nieuwe feature aangemaakt voor elk woord dat voorkomt in de dataset. De waarde van die feature is dan hoe vaak het woord voorkomt in de tekst.
+\end{enumerate}
+
+\section*{Modellen trainen}
+Nu we de data opgeschoond hebben en in een nuttige vorm gegoten hebben, kunnen we modellen trainen.
+
+\begin{enumerate}
+\item Train drie verschillende machine learning modellen. Begin met een \tb{Tree}, een \tb{Neural Network} en \tb{Logistic Regression}.
+\item Het is mogelijk de parameters van het model zelf aan te passen. Daarvoor dubbelklik je op een model. Zo kun je voorkomen dat een model \textit{over-,} of \textit{underfit}. 
+\item Evalueer de modellen met een \tb{Test and Score} module. Net als bij de iris dataset worden er verschillende metrieken weergegeven waar je naar kunt kijken.
+\item Welk metriek is voor dit probleem het belangrijkst? Waar zou je naar kijken?
+\item Experimenteer met verschillende modellen en kijk welke het beste presteert.
+\end{enumerate}
+
+De drie modellen functioneren anders, en modelleren op een unieke manier de data. Dat betekent dat ze allemaal hun sterke en zwakke punten zullen hebben.
+
+\begin{enumerate}[resume]
+\item Voeg een \tb{Predictions} module toe en verbind deze met de \tb{Test and Score} module. In de \tb{Predictions} module kun je in meer detail zien wat voor voorspellingen je modellen maken en kun je ze met elkaar vergelijken.
+\item Stuur de resultaten van de \tb{Test and Score} module naar een \tb{Confusion Matrix} module en bekijk hoe de confusion matrix eruit ziet. Ben je tevreden met de resultaten? Welk model werkt het beste?
+\end{enumerate}
+
+Het is ook mogelijk om de modellen die je getraind hebt te combineren. Je kunt ze bijvoorbeeld allemaal bij elk berichtje laten stemmen of ze denken dat het spam is of niet, en uiteindelijk voor de meerderheid kiezen. We maken dan een \textit{ensemble} aan modellen en gebruiken het ensemble gezamenlijk om voorspellingen te doen. In een aantal modellen zitten dit soort metodes al impliciet verwerkt: \textit{Random forest} is eigenlijk gewoon een ensemble met een heel aantal decision trees die samen stemmen over de oplossing, en ook bij \textit{Gradient boosting} wordt gebruik gemaakt van meerdere decision trees.
+
+\begin{enumerate}[resume]
+\item Voeg de module \tb{Stacking} toe. Deze module kan een ensemble maken van meerdere modellen samen.
+\item Verbind je modellen. Let erop dat je ze verbind als \textit{Learner}.
+\item Hoe goed doet het ensemble het in vergelijking met de losse modellen? Maakt het veel verschil?
+\item Het is ook nog mogelijk om weer een apart Machine Learning model te trainen op de output van andere modellen in plaats van gewoon de stem van de meerderheid te kiezen. Daarvoor voeg je een nieuw model toe en verbind je die met de \tb{stacking} module in de rol van \textit{aggregate}.
+\end{enumerate}
+
+\section{Nieuwe data voorspellen}
+Nu we een getest model hebben waar we tevreden mee zijn, kunnen we kijken hoe het model het doet op nieuwe, ongeziene data. Er is nog een aparte dataset met 100 nieuwe SMSjes die nog niet gelabeled zijn.
+\begin{enumerate}
+\item Voeg de nieuwe dataset toe aan je canvas en preprocess deze data op precies dezelfde manier.
+\item Voeg een nieuwe \tb{Predictions} module toe en sleep de nieuwe data naar de input.
+\item Sleep ook een of meerdere van je getrainde modellen naar de input.
+\item Nu kun je zien hoe je model nieuwe SMSjes markeert als spam of als geen spam. Ben je tevreden met de resultaten?
+\end{enumerate}
+
+In deze oefening heb je data ge\"importeerd, schoongemaakt en features ge-engineered. Je hebt meerdere machine learning modellen getraind en de resultaten ge\"evalueeerd. Daarnaast heb je modellen samengevoegd in een \textit{ensemble}. Vevolgens heb je je modellen toegepast op nieuwe, ongeziene data. Dit zijn de stappen die doorgaans doorlopen worden in de machine learning pipeline, en je kunt met dezelfde methode heel veel verschillende datasets aanvliegen.
+
+\end{document}

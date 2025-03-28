@@ -1,0 +1,75 @@
+\documentclass{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\renewcommand{\labelenumi}{\thesection.\arabic{enumi}}
+\renewcommand{\labelenumii}{\thesection.\arabic{enumi}.\arabic{enumii}}
+
+\newcommand{\tb}[1]{\textbf{#1}}
+
+\title{Workshop AI in smart industry - Iris dataset}
+\author{Onno Huijgen}
+\date{28 maart 2025}
+
+\begin{document}
+
+\maketitle{}
+
+\section*{Introductie}
+
+\section{Data inladen}
+De iris dataset kun je direct in Orange inladen
+\begin{enumerate}
+\item Open de Orange tool en begin een nieuw project.
+\item Voeg een \tb{Datasets} module toe aan je canvas. Deze kun je vinden in de toolbar aan de linkerkant onder het kopje \tb{Data}. De module toevoegen kan door erop te dubbelklikken of door hem naar het canvas te slepen.
+\item Dubbelklik op de \tb{Datasets} module. Je krijgt een overzicht met alle datasets die al automatisch beschikbaar zijn.
+\item Laad de iris dataset in door in de zoekbalk \tb{iris} te zoeken en selecteer de juiste dataset.
+\item De data is nu ingeladen. Je kunt de module \tb{Datasets} nu sluiten.
+\end{enumerate}
+
+De modules in Orange zijn losse gereedschappen. Modules kunnen data als input krijgen, doen er dan iets mee en kunnen de output doorsturen aan andere modules. Zo ontstaat er een pipeline van bewerkingen.
+
+\begin{enumerate}[resume]
+\item Op dit moment hebben we de data wel ingeladen, maar is het nog niet inzichtelijk voor ons als gebruiker hoe de data eruit ziet. Om de data inzichtelijk te maken, kun je de module \tb{Data Table} toevoegen. Deze vind je ook in de linkerbalk onder het kopje \tb{Data}.
+\item Sleep een verbinding van de rechterkant (output) van de dataset naar de linkerkant (input) van de data table.
+\item Dubbelklik de data table. Je kunt nu zien hoe de data eruit ziet. De verschillende kolommen markeren de verschillende eigenschappen van de bloemen die gemeten zijn, ook wel de \textit{features}. De rijen markeren alle bloemen die gemeten zijn in deze dataset.
+\end{enumerate}
+
+\section{Data visualiseren}
+De modules zijn in de toolbar aan de linkerkant ingedeeld in verschillende categorie\"en. Nu we de data hebben ingeladen kunnen we visualisaties maken.
+\begin{enumerate}
+\item Open de tab \tb{Visualize} in de toolbar aan de linkerkant en selecteer voeg de module \tb{Distributions} toe aan het canvas.
+\item Sleep een verbinding direct van de dataset naar de distributions.
+\item Dubbelklik de distributions.
+\end{enumerate}
+
+Je krijgt meteen een visualisatie te zien van de verdeling van de data. Aan de linkerkant kun je de instellingen van de visualisatie aanpassen. Je kunt selecteren welke feature je wilt weergeven en hoe fijn die worden opgedeeld in verschillende ranges. 
+
+\begin{enumerate}[resume]
+\item Speel met de instellingen van de visualisatie. Kun je een feature vinden waarmee je \'e\'en soort iris direct kunt herkennen?
+\item Voeg nu ook de module \tb{Scatter Plot} toe. Sleep een verbinding van de \tb{Dataset} direct naar \tb{Scatterplot} en open de interface van de \tb{Scatterplot}.
+\item Speel op dezelfde manier met de instellingen van \tb{Scatterplot}. Kun je een features vinden waarvoor een gedeelte van de data \textit{linear separeerbaar} is? Dat wil zeggen dat je een van de bloemsoorten kunt afscheiden van de rest door een rechte scheidingslijn door de data heen te trekken. \textit{Hint: }Orange kan je helpen met het zoeken naar inzichtelijke combinaties van features.
+\item Sleep nu ook een lijn van \tb{Data Table} naar \tb{Scatter Plot}. \tb{Scatter plot} heeft nu twee inputs: de \tb{Dataset} module en de \tb{Data Table} module.
+\item Selecteer alleen alle \textit{Iris setosa} punten in de \tb{Data Table}. Wat gebeurt er met de scatterplot?
+\item Selecteer weel alle data in \tb{Data Table}. Zoek in de \tb{Scatter plot} naar de meest inzichtelijke twee features en selecteer deze. 
+\end{enumerate}
+
+\section{Model trainen}
+Nu het wat inzichtelijker is met wat voor data we te maken hebben kunnen we een model trainen. Je kunt in de toolbar links verschillende Machine Learning modellen vinden onder het kopje \tb{Model}.
+
+\begin{enumerate}
+\item Selecteer het model \tb{Tree} en voeg het toe aan je canvas.
+\item Voeg ook de module \tb{Test and Score} onder het kopje \tb{Evaluate} toe aan je canvas.
+\item Sleep een lijn van je \tb{Dataset} naar \tb{Test and Score}
+\item Sleep een lijn van \tb{Tree} naar \tb{Test and score}
+\item Dubbelklik op \tb{Test and score}. Deze module laat zien hoe goed het machine learning model scoort op de dataset door middel van een paar verschillende metrieken: Area Under the Receiver Operator Curve (AUC of Area under ROC), Class Accuracy (CA), F1 score, Precision, Recall en Matthew's Correlation Coefficient (MCC). Zoek van de metrieken die je niet kent op wat ze betekenen.
+\item Speel als je tijd over hebt met wat andere modellen. Probeer van modellen die je niet kent op te zoeken hoe ze ongeveer werken.
+\end{enumerate}
+
+
+\end{document}
