@@ -1,0 +1,21 @@
+\documentclass{article}
+
+\usepackage{geometry}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\title{Korte handleiding Orange Data Mining}
+\author{Onno Huijgen}
+
+\begin{document}
+
+\maketitle{}
+
+Deze handleiding is ter introductie van het programma Orange Data Mining. Al het matieraal is te vinden via \href{https://github.com/OnnoHuygen/orange_workshop/tree/main}{Github (link)}
+
+
+
+\end{document}

@@ -6,45 +6,89 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{enumitem}
+\usepackage{subcaption}
+\usepackage{graphicx}
 
 \renewcommand{\labelenumi}{\thesection.\arabic{enumi}}
 \renewcommand{\labelenumii}{\thesection.\arabic{enumi}.\arabic{enumii}}
 
 \newcommand{\tb}[1]{\textbf{#1}}
 
-\title{Workshop AI in smart industry - SMS dataset}
+\title{Orange workshop - SMS dataset}
 \author{Onno Huijgen}
-\date{28 maart 2025}
+\date{\today}
 
 \begin{document}
 
 \maketitle{}
 
 \section*{Introductie}
+Deze opdracht is onderdeel van de Orange Data Mining workshop. Al het matieraal is te vinden via Github: \url{https://github.com/OnnoHuygen/orange_workshop/}.
+
 We gaan nu aan de slag met wat complexere data. We hebben data verzameld van 1000 SMS-berichten. Een gedeelte van die berichten is ongewenste spam, dus het is aan ons om een spamfilter te ontwikkelen. 
 
 \section{Data inladen}
 \begin{enumerate}
 \item Open een nieuw canvas in de Orange tool.
-\item Dit keer is de dataset niet al aanwezig in de tool, en moeten we hem zelf inladen. Maak een module \tb{file} aan op je canvas en laad de SMS-data met labels in. Zorg dat de feature SPAM als \textit{categorical target} variabele staat gemarkeerd.
+\item Dit keer is de dataset niet al aanwezig in de tool, en moeten we hem zelf inladen. Maak een module \tb{file} aan op je canvas en laad de SMS-data met labels in. Zorg dat de feature SPAM als \textit{categorical target} variabele staat gemarkeerd (zie figuur~\ref{fig:input}).
 \item Laad de data in een \tb{Data Table} en kijk hoe de data eruitziet.
 \item We moeten de data eerst in een formaat zetten waar de Orange tool verder mee kan werken. Dat doen we door een corpus te maken. Voeg een \tb{Corpus} module toe en neem als input de data uit het bestand.
-\item Je kunt een overzicht maken van de woorden die vaak in de teksten voorkomen door een wordcloud te maken. Doe dit met de \tb{wordcloud} module
+\item Nu de data gestructureerd in een \tb{Corpus} staat, kunnen we de tekst bekijken met de \verb|Corpus viewer| module, zie figuur~\ref{fig:cvv}.
+\item Je kunt een overzicht maken van de woorden die vaak in de teksten voorkomen door een wordcloud te maken. Doe dit met de \tb{wordcloud} module.
 \end{enumerate}
 
+\begin{figure}[hbtp]
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.99\textwidth]{Figures/input.png}
+    \caption{Menu input data.}
+    \label{fig:input}
+  \end{subfigure}%
+  ~ 
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.99\textwidth]{Figures/corpus_view.png}
+    \caption{Corpus viewer}
+    \label{fig:cvv}
+  \end{subfigure}
+  \caption{}
+  \label{fig:cv}
+\end{figure}
+
 \section{Preprocessing}
-Vaak is het niet een goed idee om de data direct zoals hij is in een machine learning model te gooien. Het is voor een model belangrijk dat de data in het juiste formaat staat, dat er geen missende waardes zijn, en dat er de juiste features zijn waar het model ook van kan leren.
+Vaak is het niet een goed idee om de data direct zoals hij is in een machine learning model te stoppen. Het is voor een model belangrijk dat de data in het juiste formaat staat, dat er geen missende waardes zijn, en dat er de juiste features zijn waar het model ook van kan leren.
 In dit geval is er geen missende data, maar zijn er ook geen duidelijke (numerieke) features waar een model iets mee kan. Daarnaast is de tekst in de SMSjes nog vrij grof. Identieke woorden kunnne er bijvoorbeeld nog met of zonder hoofdletter instaan, en voor we beginnen met trainen is het handig om dit uniform te maken. Ook staan er nog allerlei leestekens in de tekst. Om dat op te lossen, gaan we de data eerst preprocessen.
 
 \begin{enumerate}
 \item Voeg de module \tb{Preprocess text} toe en verbind je corpus.
-\item In de preprocessor kun je verschillende preprocessing stappen tegelijk uit laten voeren. Begin ermee te zorgen dat de preprocessor alle woorden in lowercase zet.
-\item Zorg dat je preprocessor alle smsjes opbreekt in losse woorden. Dit heet tokenization.
+\item In de preprocessor kun je verschillende preprocessing stappen tegelijk uit laten voeren. In figuur~\ref{fig:preprocess} kun je zien welke stappen standaard aanwezig zijn. Zorg er allereerst voor dat de preprocessor alle woorden in kleine letters zet.
+\item Zorg dat je preprocessor alle smsjes opbreekt in losse woorden of woordonderdelen. Dit heet tokenization.
 \item Filter weinig zeggende tussenwoorden uit de dataset. Denk aan woorden als 'de', 'een' of 'en'. Deze worden ook wel \textit{Stopwords} genoemd.
 \item Maak een wordcloud van de tekst na het preprocessen. Ben je tevreden met de woorden die je ziet? Als je nog stopwords toe wilt voegen, kan dat handmatig door een bestandje te maken (stopwords.txt) en in te laden in de preprocessor. Filter stopwords uit de tekst tot je tevreden bent met de wordcloud.
 \item We gaan de data nu omzetten naar een numerieke vorm. Daarvoor gaan we bij elk bericht tellen hoevaak woorden voorkomen. Deze vorm van data heet \tb{Bag of Words}. Maak van de data een \tb{Bag of Words} door de gelijknamige module toe te voegen.
 \item Voor we naar het modelleren overgaan is het handig om nog een transform \tb{Select Columns} toe te voegen. Daarin kun je aangeven welk van de features de target is en wat je allemaal als input gebruikt. Zoals je ziet is er een nieuwe feature aangemaakt voor elk woord dat voorkomt in de dataset. De waarde van die feature is dan hoe vaak het woord voorkomt in de tekst.
 \end{enumerate}
+
+Je pipeline zou er nu ongeveer uit moeten zien als figuur~\ref{fig:pip1}
+\begin{figure}[hbtp]
+  \centering
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.99\textwidth]{Figures/preprocess_text.png}
+    \caption{Text preprocessing module die meerdere stappen uitvoert.}
+    \label{fig:preprocess}
+  \end{subfigure}%
+  ~ 
+  \begin{subfigure}[b]{0.5\textwidth}
+    \centering
+    \includegraphics[width=0.99\textwidth]{Figures/pip1.png}
+    \caption{Pipeline after preprocessing}
+    \label{fig:pip1}
+  \end{subfigure}
+  \caption{}
+  \label{fig:pip}
+\end{figure}
 
 \section*{Modellen trainen}
 Nu we de data opgeschoond hebben en in een nuttige vorm gegoten hebben, kunnen we modellen trainen.
@@ -82,6 +126,15 @@ Nu we een getest model hebben waar we tevreden mee zijn, kunnen we kijken hoe he
 \item Nu kun je zien hoe je model nieuwe SMSjes markeert als spam of als geen spam. Ben je tevreden met de resultaten?
 \end{enumerate}
 
-In deze oefening heb je data ge\"importeerd, schoongemaakt en features ge-engineered. Je hebt meerdere machine learning modellen getraind en de resultaten ge\"evalueeerd. Daarnaast heb je modellen samengevoegd in een \textit{ensemble}. Vevolgens heb je je modellen toegepast op nieuwe, ongeziene data. Dit zijn de stappen die doorgaans doorlopen worden in de machine learning pipeline, en je kunt met dezelfde methode heel veel verschillende datasets aanvliegen.
+In deze oefening heb je data ge\"importeerd, schoongemaakt en features ge-engineered. Je hebt meerdere machine learning modellen getraind en de resultaten ge\"evalueeerd. Daarnaast heb je modellen samengevoegd in een \textit{ensemble}. Vevolgens heb je je modellen toegepast op nieuwe, ongeziene data. Dit zijn de stappen die doorgaans doorlopen worden in de machine learning pipeline, en je kunt met dezelfde methode heel veel verschillende datasets aanvliegen. De uiteindelijke pipeline zal er ongeveer uitzien zoals in figuur~\ref{fig:pip2}
+
+\begin{figure}[hbtp]
+  \centering
+  \includegraphics[width=0.9\textwidth]{Figures/pip2.png}
+  \caption{Uiteindelijke pipeline voor de spamfilter}
+  \label{fig:pip2}
+\end{figure}
+
+
 
 \end{document}
